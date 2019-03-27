@@ -23,6 +23,7 @@
 # Function lines are C function signatures, optionally preceded by:
 #   MPI     If present, function requires an MPI-aware build of h5py
 #   ERROR   Explicit error checks are needed (HDF5 does not use error stack)
+#   X.Y     Definition for a specific HDF5 branch
 #   X.Y.Z   Minimum version of HDF5 required for this function
 #
 # Blank/whitespace-only lines are ignored, as are lines whose first
@@ -112,10 +113,12 @@ hdf5:
   1.9.178   herr_t H5Drefresh(hid_t dataset_id)
 
   # Direct Chunk Read/Write
-  1.8.11    herr_t H5DOwrite_chunk(hid_t dset_id, hid_t dxpl_id, uint32_t filters, const hsize_t *offset, size_t data_size, const void *buf)
-  1.10.2    herr_t H5Dget_chunk_storage_size(hid_t dset_id, const hsize_t *offset, hsize_t *chunk_nbytes)
-  1.10.2    herr_t H5DOread_chunk(hid_t dset_id, hid_t dxpl_id, const hsize_t *offset, uint32_t *filters, void *buf)
-  1.10.3    herr_t H5Dread_chunk(hid_t dset_id, hid_t dxpl_id, const hsize_t *offset, uint32_t *filters, void *buf)
+  1.8.11      herr_t H5DOwrite_chunk(hid_t dset_id, hid_t dxpl_id, uint32_t filters, const hsize_t *offset, size_t data_size, const void *buf)
+  1.8 1.8.19  herr_t H5Dget_chunk_storage_size(hid_t dset_id, const hsize_t *offset, hsize_t *chunk_nbytes)
+  1.8 1.8.11  herr_t H5DOread_chunk(hid_t dset_id, hid_t dxpl_id, const hsize_t *offset, uint32_t *filters, void *buf)
+  1.10.2      herr_t H5Dget_chunk_storage_size(hid_t dset_id, const hsize_t *offset, hsize_t *chunk_nbytes)
+  1.10.2      herr_t H5DOread_chunk(hid_t dset_id, hid_t dxpl_id, const hsize_t *offset, uint32_t *filters, void *buf)
+  1.10.3      herr_t H5Dread_chunk(hid_t dset_id, hid_t dxpl_id, const hsize_t *offset, uint32_t *filters, void *buf)
 
 
   # === H5E - Minimal error-handling interface ================================

@@ -56,8 +56,8 @@ class Line(object):
 
     PATTERN = re.compile("""(?P<mpi>(MPI)[ ]+)?
                             (?P<error>(ERROR)[ ]+)?
-                            (?P<version>([0-9]+\.[0-9]+\.[0-9]+))?
-                            ([ ]+)?
+                            (?P<branch>([0-9]+\.[0-9]+)[ ]+)?
+                            (?P<version>([0-9]+\.[0-9]+\.[0-9]+)[ ]+)?
                             (?P<code>(unsigned[ ]+)?[a-zA-Z_]+[a-zA-Z0-9_]*\**)[ ]+
                             (?P<fname>[a-zA-Z_]+[a-zA-Z0-9_]*)[ ]*
                             \((?P<sig>[a-zA-Z0-9_,* ]*)\)
@@ -85,8 +85,11 @@ class Line(object):
         self.mpi = parts['mpi'] is not None
         self.error = parts['error'] is not None
         self.version = parts['version']
+        self.branch = parts['branch']
         if self.version is not None:
             self.version = tuple(int(x) for x in self.version.split('.'))
+        if self.branch is not None:
+            self.branch = tuple(int(x) for x in self.branch.split('.'))
         self.code = parts['code']
         self.fname = parts['fname']
         self.sig = parts['sig']
@@ -176,8 +179,19 @@ class LineProcessor(object):
 
         if self.line.mpi:
             block = wrapif('MPI', block)
+        if self.line.version is not None or self.line.branch is not None:
+            conditions = []
+            if self.line.branch is not None:
+                conditions.append('HDF5_VERSION[0:2] >= {0.branch}')
+            if self.line.version is not None:
+                conditions.append('HDF5_VERSION >= {0.version}')
+            template = " and ".join(conditions)
+            block = wrapif(template.format(self.line), block)
+
         if self.line.version is not None:
             block = wrapif('HDF5_VERSION >= {0.version}'.format(self.line), block)
+        if self.line.branch is not None:
+            block = wrapif('HDF5_VERSION[0:2] == {0.branch}'.format(self.line), block)
 
         return block
 
